@@ -5,21 +5,22 @@
     <div class='card mt-3'>
         <div class='card-body'>
             <h5 class="card-title mb-5">Tabela de vendas
-                <a href='' class='btn btn-secondary float-right btn-sm rounded-pill'><i class='fa fa-plus'></i>  Nova venda</a></h5>
-            <form>
+                <a href="{{ route('sales.create') }}" class='btn btn-secondary float-right btn-sm rounded-pill'><i class='fa fa-plus'></i>  Nova venda</a></h5>
+            <form method="POST">
+                @csrf
                 <div class="form-row align-items-center">
                     <div class="col-sm-5 my-1">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">Clientes</div>
                             </div>
-                            <select class="form-control" id="inlineFormInputName">
-                                <option>Clientes</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            <select name="id_cliente" class="form-control" id="inlineFormInputName">
+                                <option value="">Clientes</option>
+                                @if(!empty($clientes))
+                                    @foreach ($clientes as $cliente)
+                                        <option value="{{$cliente->id}}">{{ $cliente->nome }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>
@@ -29,7 +30,7 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text">Período</div>
                             </div>
-                            <input type="text" class="form-control date_range" id="inlineFormInputGroupUsername" placeholder="Username">
+                            <input name="date_range" type="text" class="form-control date_range" id="inlineFormInputGroupUsername" placeholder="Username">
                         </div>
                     </div>
                     <div class="col-sm-1 my-1">
@@ -53,48 +54,28 @@
                         Ações
                     </th>
                 </tr>
-                <tr>
-                    <td>
-                        Perfect Caps
-                    </td>
-                    <td>
-                        20/07/2019 19h15
-                    </td>
-                    <td>
-                        R$ 100,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Nature Caps
-                    </td>
-                    <td>
-                        20/07/2019 19h20
-                    </td>
-                    <td>
-                        R$ 125,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Libid Caps
-                    </td>
-                    <td>
-                        20/07/2019 19h45
-                    </td>
-                    <td>
-                        R$ 110,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
+                @if(!empty($vendas))
+                    @foreach ($vendas as $venda)
+                    <tr>
+                        <td>
+                            {{ $venda->nome}}
+                        </td>
+                        <td>
+                            {{ $venda->data_venda }}
+                        </td>
+                        <td>
+                            R$ {{ number_format($venda->total, 2, '.', ',') }}
+                        </td>
+                    
+                        <td>
+                            <a href='{{ route('sales.edit', $venda->id) }}' 
+                            class='btn btn-primary'>Editar</a>
+                            <a  href='{{ route('sales.show', $venda->id) }}' 
+                                class='btn btn-danger'>Excluir</a>
+                        </td>
+                    </tr>
+                    @endforeach
+            @endif
             </table>
         </div>
     </div>
@@ -113,39 +94,25 @@
                         Valor Total
                     </th>
                 </tr>
+
                 <tr>
-                    <td>
-                        Vendidos
-                    </td>
-                    <td>
-                        100
-                    </td>
-                    <td>
-                        R$ 100,00
-                    </td>
+                    <td>Aprovados</td>
+                    <td>{{$aprovados["quantidade"]}}</td>
+                    <td>{{$aprovados["total"]}}</td>
                 </tr>
+
                 <tr>
-                    <td>
-                        Cancelados
-                    </td>
-                    <td>
-                        120
-                    </td>
-                    <td>
-                        R$ 100,00
-                    </td>
+                    <td>Cancelados</td>
+                    <td>{{$cancelados["quantidade"]}}</td>
+                    <td>{{$cancelados["total"]}}</td>
                 </tr>
+
                 <tr>
-                    <td>
-                        Devoluções
-                    </td>
-                    <td>
-                        120
-                    </td>
-                    <td>
-                        R$ 100,00
-                    </td>
+                    <td>Devoluções</td>
+                    <td>{{$devolucoes["quantidade"]}}</td>
+                    <td>{{$devolucoes["total"]}}</td>
                 </tr>
+                
             </table>
         </div>
     </div>
@@ -153,7 +120,7 @@
     <div class='card mt-3'>
         <div class='card-body'>
             <h5 class="card-title mb-5">Produtos
-                <a href='' class='btn btn-secondary float-right btn-sm rounded-pill'><i class='fa fa-plus'></i>  Novo produto</a></h5>
+                <a href="{{ route('products.create') }}" class='btn btn-secondary float-right btn-sm rounded-pill'><i class='fa fa-plus'></i>  Novo produto</a></h5>
             <table class='table'>
                 <tr>
                     <th scope="col">
@@ -163,42 +130,37 @@
                         Valor
                     </th>
                     <th scope="col">
+                        URL
+                    </th>
+                    <th scope="col">
                         Ações
                     </th>
                 </tr>
-                <tr>
-                    <td>
-                        Perfect Caps
-                    </td>
-                    <td>
-                        R$ 100,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Nature Caps
-                    </td>
-                    <td>
-                        R$ 120,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Libid Caps
-                    </td>
-                    <td>
-                        R$ 150,00
-                    </td>
-                    <td>
-                        <a href='' class='btn btn-primary'>Editar</a>
-                    </td>
-                </tr>
+                @if(!empty($produtos))
+                    @foreach ($produtos as $produto)
+                    <tr>
+                        <td>
+                            {{ $produto->nome }}
+                        </td>
+                        <td>
+                            R$ {{ number_format($produto->preco, 2, '.', ',') }}
+                        </td>
+                        <td>
+                           @if ($produto->imagem)
+                                <a href="{{ url('storage/'.$produto->imagem)}}" target="blank">Ver imagem</a>
+                            @else
+                                Não possui imagem
+                           @endif
+                        </td>
+                        <td>
+                            <a href='{{ route('products.edit', $produto->id) }}' 
+                            class='btn btn-primary'>Editar</a>
+                            <a  href='{{ route('products.show', $produto->id) }}' 
+                                class='btn btn-danger'>Excluir</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                @endif
             </table>
         </div>
     </div>
