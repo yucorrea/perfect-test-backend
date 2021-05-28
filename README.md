@@ -48,6 +48,9 @@ $ DB_DATABASE=laravel
 $ DB_USERNAME=root
 $ DB_PASSWORD=
 
+# Limpar cache
+$ php artisan config:cache
+
 # Criar migrations
 $ php artisan migrate
 
